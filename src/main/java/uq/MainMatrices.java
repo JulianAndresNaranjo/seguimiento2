@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class MainMatrices {
 
-    static int[] tamanos = {256, 512};
+    static int[] tamanos = {512, 1024};
     static int BSIZE = 64;
 
     public static void main(String[] args) throws Exception {
@@ -33,9 +33,9 @@ public class MainMatrices {
             ejecutar(caso,"StrassenNaiv", n, A, B, C);
             ejecutar(caso,"StrassenWinograd", n, A, B, C);
 
-            ejecutar(caso,"III.3 Sequential block", n, A, B, C);
-            ejecutar(caso,"III.4 Parallel block", n, A, B, C);
-            ejecutar(caso,"III.5 Enhanced Parallel block", n, A, B, C);
+            ejecutar(caso,"SequentialBlockIII", n, A, B, C);
+            ejecutar(caso,"ParallelBlockIII", n, A, B, C);
+            ejecutar(caso,"EnhancedParallelBlockIII", n, A, B, C);
 
             ejecutar(caso,"IV.3 Sequential block", n, A, B, C);
             ejecutar(caso,"IV.4 Parallel block", n, A, B, C);
@@ -64,15 +64,15 @@ public class MainMatrices {
             case "StrassenWinograd": copiar(strassenWinograd(A,B),C); break;
 
             case "SequentialBlockIII": SequentialBlockIII(A,B,C,n); break;
-            case "ParallelBlockIII": ParallelBlock(A,B,C,n); break;
-            case "EnhancedParallelBlock": enhancedIII(A,B,C,n); break;
+            case "ParallelBlockIII": ParallelBlockIII(A,B,C,n); break;
+            case "EnhancedParallelBlockIII": EnhancedParallelBlockIII(A,B,C,n); break;
 
             case "SequentialBlockIV": SequentialBlockIV(A,B,C,n); break;
-            case "IV.4 Parallel block": parallelIV(A,B,C,n); break;
-            case "IV.5 Enhanced Parallel block": enhancedIV(A,B,C,n); break;
+            case "ParallelBlockIV": ParallelBlockIV(A,B,C,n); break;
+            case "EnhancedParallelBlockIV": EnhancedParallelBlockIV(A,B,C,n); break;
 
-            case "V.3 Sequential block": blockV(A,B,C,n); break;
-            case "V.4 Parallel block": parallelV(A,B,C,n); break;
+            case "SequentialBlockV": SequentialBlockV(A,B,C,n); break;
+            case "ParallelBlockV": ParallelBlockV(A,B,C,n); break;
         }
 
         long fin = System.nanoTime();
@@ -223,6 +223,7 @@ public class MainMatrices {
     // =========================
 
     static void SequentialBlockIII(int[][] A, int[][] B, int[][] C, int n){
+
         for(int i1=0;i1<n;i1+=BSIZE)
             for(int j1=0;j1<n;j1+=BSIZE)
                 for(int k1=0;k1<n;k1+=BSIZE)
@@ -232,7 +233,7 @@ public class MainMatrices {
                                 C[i][j]+=A[i][k]*B[k][j];
     }
 
-    static void ParallelBlock(int[][] A, int[][] B, int[][] C, int n){
+    static void ParallelBlockIII(int[][] A, int[][] B, int[][] C, int n){
         IntStream.range(0,n).parallel().forEach(i->{
             for(int j=0;j<n;j++)
                 for(int k=0;k<n;k++)
@@ -240,7 +241,8 @@ public class MainMatrices {
         });
     }
 
-    static void enhancedIII(int[][] A,int[][] B,int[][] C,int n){
+    static void EnhancedParallelBlockIII(int[][] A, int[][] B, int[][] C, int n){
+
         Thread t1=new Thread(()->{for(int i=0;i<n/2;i++)for(int j=0;j<n;j++)for(int k=0;k<n;k++)C[i][j]+=A[i][k]*B[k][j];});
         Thread t2=new Thread(()->{for(int i=n/2;i<n;i++)for(int j=0;j<n;j++)for(int k=0;k<n;k++)C[i][j]+=A[i][k]*B[k][j];});
         t1.start();t2.start();
@@ -254,7 +256,7 @@ public class MainMatrices {
                     C[i][k]+=A[i][j]*B[j][k];
     }
 
-    static void parallelIV(int[][] A,int[][] B,int[][] C,int n){
+    static void ParallelBlockIV(int[][] A, int[][] B, int[][] C, int n){
         IntStream.range(0,n).parallel().forEach(i->{
             for(int k=0;k<n;k++)
                 for(int j=0;j<n;j++)
@@ -262,18 +264,18 @@ public class MainMatrices {
         });
     }
 
-    static void enhancedIV(int[][] A,int[][] B,int[][] C,int n){
-        enhancedIII(A,B,C,n);
+    static void EnhancedParallelBlockIV(int[][] A, int[][] B, int[][] C, int n){
+        EnhancedParallelBlockIII(A,B,C,n);
     }
 
-    static void blockV(int[][] A,int[][] B,int[][] C,int n){
+    static void SequentialBlockV(int[][] A, int[][] B, int[][] C, int n){
         for(int i=0;i<n;i++)
             for(int j=0;j<n;j++)
                 for(int k=0;k<n;k++)
                     C[k][i]+=A[k][j]*B[j][i];
     }
 
-    static void parallelV(int[][] A,int[][] B,int[][] C,int n){
+    static void ParallelBlockV(int[][] A, int[][] B, int[][] C, int n){
         IntStream.range(0,n).parallel().forEach(i->{
             for(int j=0;j<n;j++)
                 for(int k=0;k<n;k++)
