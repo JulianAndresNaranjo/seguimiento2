@@ -1,10 +1,10 @@
 package uq.clasicos;
 
-import uq.Aux;
+import uq.Apoyov;
 
 public class Strassen {
 
-    static Aux aux = new Aux();
+    static Apoyov apoyov = new Apoyov();
 
     public int[][] strassen(int[][] A,int[][] B){
         int n=A.length;
@@ -13,27 +13,27 @@ public class Strassen {
 
         int s=n/2;
 
-        int[][] A11=aux.sub(A,0,0,s),A12=aux.sub(A,0,s,s),
-                A21=aux.sub(A,s,0,s),A22=aux.sub(A,s,s,s);
+        int[][] A11= apoyov.sub(A,0,0,s),A12= apoyov.sub(A,0,s,s),
+                A21= apoyov.sub(A,s,0,s),A22= apoyov.sub(A,s,s,s);
 
-        int[][] B11=aux.sub(B,0,0,s),B12=aux.sub(B,0,s,s),
-                B21=aux.sub(B,s,0,s),B22=aux.sub(B,s,s,s);
+        int[][] B11= apoyov.sub(B,0,0,s),B12= apoyov.sub(B,0,s,s),
+                B21= apoyov.sub(B,s,0,s),B22= apoyov.sub(B,s,s,s);
 
-        int[][] M1=strassen(aux.sum(A11,A22),aux.sum(B11,B22));
-        int[][] M2=strassen(aux.sum(A21,A22),B11);
-        int[][] M3=strassen(A11,aux.subt(B12,B22));
-        int[][] M4=strassen(A22,aux.subt(B21,B11));
-        int[][] M5=strassen(aux.sum(A11,A12),B22);
-        int[][] M6=strassen(aux.subt(A21,A11),aux.sum(B11,B12));
-        int[][] M7=strassen(aux.subt(A12,A22),aux.sum(B21,B22));
+        int[][] M1=strassen(apoyov.sum(A11,A22), apoyov.sum(B11,B22));
+        int[][] M2=strassen(apoyov.sum(A21,A22),B11);
+        int[][] M3=strassen(A11, apoyov.subt(B12,B22));
+        int[][] M4=strassen(A22, apoyov.subt(B21,B11));
+        int[][] M5=strassen(apoyov.sum(A11,A12),B22);
+        int[][] M6=strassen(apoyov.subt(A21,A11), apoyov.sum(B11,B12));
+        int[][] M7=strassen(apoyov.subt(A12,A22), apoyov.sum(B21,B22));
 
-        int[][] C11=aux.sum(aux.subt(aux.sum(M1,M4),M5),M7);
-        int[][] C12=aux.sum(M3,M5);
-        int[][] C21=aux.sum(M2,M4);
-        int[][] C22=aux.sum(aux.subt(aux.sum(M1,M3),M2),M6);
+        int[][] C11= apoyov.sum(apoyov.subt(apoyov.sum(M1,M4),M5),M7);
+        int[][] C12= apoyov.sum(M3,M5);
+        int[][] C21= apoyov.sum(M2,M4);
+        int[][] C22= apoyov.sum(apoyov.subt(apoyov.sum(M1,M3),M2),M6);
 
-        aux.join(C,C11,0,0); aux.join(C,C12,0,s);
-        aux.join(C,C21,s,0); aux.join(C,C22,s,s);
+        apoyov.join(C,C11,0,0); apoyov.join(C,C12,0,s);
+        apoyov.join(C,C21,s,0); apoyov.join(C,C22,s,s);
 
         return C;
     }
