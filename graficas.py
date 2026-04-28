@@ -16,9 +16,10 @@ for caso in casos:
     plt.figure()
     plt.bar(data["Algoritmo"], data["Tiempo"])
     plt.xticks(rotation=90)
+    plt.yscale('log')
     plt.title(f"Tiempo por algoritmo - {caso}")
     plt.xlabel("Algoritmo")
-    plt.ylabel("Tiempo (ms)")
+    plt.ylabel("Tiempo (ms) [escala log]")
     plt.tight_layout()
     plt.savefig(f"{caso}.png")
 
@@ -29,10 +30,11 @@ pivot = df.pivot_table(index="Algoritmo", columns="N", values="Tiempo", aggfunc=
 
 plt.figure()
 pivot.plot(kind="bar")
+plt.yscale('log')
 plt.xticks(rotation=90)
-plt.title("Comparación 256 vs 512")
+plt.title("Comparación 512 vs 1024")
 plt.xlabel("Algoritmo")
-plt.ylabel("Tiempo (ms)")
+plt.ylabel("Tiempo (ms) [escala log]")
 plt.tight_layout()
 plt.savefig("comparacion.png")
 
